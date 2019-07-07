@@ -4,7 +4,8 @@ const CACHE_DURATION = 600;
 const CACHE_KEY = 'CACHE_KEY';
 
 function generateResponse(object){
-
+    console.log(object);
+    //return object;
     function leadingZero(n) {
         if(n<10){
             return '0' + n.toString()
@@ -14,7 +15,48 @@ function generateResponse(object){
 
     function dateFormat(num,delimiter) {
         const d = new Date(num)
-        return leadingZero(d.getDay()) + delimiter + leadingZero(d.getMonth()) + delimiter + d.getFullYear();
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov']
+        return d.getDay() + delimiter + months[d.getMonth()] + delimiter + d.getFullYear();
+    }
+
+    function getWindDirectionStr(deg) {
+
+        if(deg<=90){
+            if(deg==0){
+                return 'North';
+            }
+            return 'Northeast'
+        }
+
+        if(deg>90 && deg<=180){
+            if(deg==180){
+                return 'East';
+            }
+            return 'Southeast'
+        }
+
+        if(deg>180 && deg<=270){
+            if(deg==270){
+                return 'West';
+            }
+            return 'Southwest'
+        }
+
+        if(deg==360){
+            return 'North'
+        }
+        return "Northwest"
+
+    }
+
+    let arr = [];
+    for (let i = 0; i < 3; i++) {
+        arr.push({
+            "date": dateFormat(object.list[i].dt * 1000, ' '),
+            "summary": object.list[i].weather[0].description,
+            "temp": { "day": object.list[0].temp.day, "night": object.list[i].temp.night },
+            "wind": { "direction": getWindDirectionStr(object.list[i].deg), "speed": object.list[i].speed}
+        });
     }
 
 
@@ -23,30 +65,10 @@ function generateResponse(object){
             "name": object.city.name,
             "country": object.city.country
         },
-        "forecast":[
-            {
-                "date": dateFormat(object.list[0].dt * 1000, '-'),
-                "summary": object.list[0].weather.description,
-                "temp": { "day": object.list[0].temp.day, "night": object.list[0].temp.night },
-                "wind": { "direction": "Northwest", "speed": "Light breeze"}
-            },
-            {
-                "date": dateFormat(object.list[1].dt * 1000, '-'),
-                "summary": object.list[1].weather.description,
-                "temp": { "day": object.list[1].temp.day, "night": object.list[1].temp.night },
-                "wind": { "direction": "Northwest", "speed": "Light breeze"}
-            },
-            {
-                "date": dateFormat(object.list[2].dt * 1000, '-'),
-                "summary": object.list[2].weather.description,
-                "temp": { "day": object.list[2].temp.day, "night": object.list[2].temp.night },
-                "wind": { "direction": "Northwest", "speed": "Light breeze"}
-            }
-        ]
+        "forecast":arr
     }
 
 }
-
 
 
 
