@@ -4,6 +4,11 @@ const CACHE_DURATION = 600;
 const CACHE_KEY = 'CACHE_KEY';
 
 function generateResponse(object){
+
+    if(!object){
+        return {};
+    }
+
     console.log(object);
     //return object;
     function leadingZero(n) {
@@ -16,7 +21,7 @@ function generateResponse(object){
     function dateFormat(num,delimiter) {
         const d = new Date(num)
         const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov']
-        return d.getDay() + delimiter + months[d.getMonth()] + delimiter + d.getFullYear();
+        return d.getDate() + delimiter + months[d.getMonth()] + delimiter + d.getFullYear();
     }
 
     function getWindDirectionStr(deg) {
