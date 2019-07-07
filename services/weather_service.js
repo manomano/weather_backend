@@ -92,7 +92,12 @@ exports.CacheableRequest = function(cb,params) {
                     cnt:3
                 }
             },function (err, response, body) {
-                let res = generateResponse(JSON.parse(body));
+                const parsedData = JSON.parse(body)
+                if(parsedData.cod && parsedData.cod==404){
+                    cb(parsedData);
+                    return;
+                }
+                let res = generateResponse(parsedData);
                 cacheProvider.instance().set(params.city, res, CACHE_DURATION, function(err, success) {
                     if (!err && success) {
                         cb(res);
