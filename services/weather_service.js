@@ -94,7 +94,9 @@ exports.CacheableRequest = function(cb,params) {
             },function (err, response, body) {
                 const parsedData = JSON.parse(body)
                 if(parsedData.cod && parsedData.cod==404){
-                    cb(parsedData);
+                    response.statusCode = 400;
+
+                    cb(response);
                     return;
                 }
                 let res = generateResponse(parsedData);

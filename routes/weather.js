@@ -9,6 +9,12 @@ router.post('/weather/:periodicity/:city', function (rec, res, next) {
     console.log(rec.params);
 
     weatherService.CacheableRequest(function(results) {
+        if(results.statusCode==404){
+            //next(new NotFound('Entity with id: ' + id + ' couldn\'t be bound.'))
+            //next(results)
+
+            return res.status(400).send();
+        }
         res.send(results);
     }, rec.params);
 

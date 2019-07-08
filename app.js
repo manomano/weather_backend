@@ -72,19 +72,32 @@ app.use('/users', usersRouter);
 app.use('/api', weatherRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+// app.use(function(req, res, next) {
+//   next(createError(404));
+//
+// });
+//
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+//
+//   // render the error page
+//   //res.status(err.status || 500);
+//   res.status(err.status || 500).json(err);
+//  // res.render('error');
+// });
+
+
+app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+  logger.error(err);
+  res.status(err.status || 500).send(err.message);
+});
+app.use('*', (req, res) => {
+  res.status(404);
+  res.send('URL cannot found');
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
 
 module.exports = app;
